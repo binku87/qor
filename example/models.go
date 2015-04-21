@@ -97,6 +97,23 @@ type OrderItem struct {
 	Quantity  uint
 }
 
+type DiscountRule struct {
+	gorm.Model
+}
+
+type DiscountBenefit struct {
+	gorm.Model
+}
+
+type Discount struct {
+	gorm.Model
+	Value     string
+	Benefit   DiscountBenefit
+	BenefitID string
+	Rule      DiscountRule
+	RuleID    string
+}
+
 var DB gorm.DB
 var Publish *publish.Publish
 
