@@ -263,3 +263,24 @@ StateMachine
     orderState.To("finish", &order)
       order.SetState("finish")
       order.NewStateLog("finish", tableName, Id, notes)
+
+Promotion:
+
+  rule := promotion.RegisterRule("Amount Greater Than", func(values MetaValues, order interface{}) bool {
+    return order.(*Order) > values.Get("Amount")
+  })
+  rule.Meta(&admin.Meta{Name: "Amount", Type: "datetime"})
+
+  benefit := promotion.RegisterBenefit("Discount Rate", func(values MetaValues, order interface{}) {
+    order.(*Order).DiscountRate = values.Get("Rate")
+  })
+  benefit.Meta(&admin.Meta{Name: "Rate", Type: "number"})
+
+  benefit := promotion.RegisterBenefit("Discount Value", func(values MetaValues, order interface{}) {
+    order.(*Order).DiscountValue = values.Get("Value")
+  })
+  benefit.Meta(&admin.Meta{Name: "Value", Type: "number"})
+
+  Discount {
+    Name string
+  }

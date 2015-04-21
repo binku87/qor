@@ -99,19 +99,33 @@ type OrderItem struct {
 
 type DiscountRule struct {
 	gorm.Model
+	DiscountID string
+	Type       string
+	Value      string
 }
 
 type DiscountBenefit struct {
 	gorm.Model
+	DiscountID string
+	Type       string
+	Value      string
+}
+
+type DiscountCode struct {
+	gorm.Model
+	DiscountID     string
+	Code           string
+	AvailableTimes uint
 }
 
 type Discount struct {
 	gorm.Model
-	Value     string
-	Benefit   DiscountBenefit
-	BenefitID string
-	Rule      DiscountRule
-	RuleID    string
+	Name     string
+	Benefits []DiscountBenefit
+	Rules    []DiscountRule
+	Codes    []DiscountCode
+	Begins   *time.Time
+	Expires  *time.Time
 }
 
 var DB gorm.DB
