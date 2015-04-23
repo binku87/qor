@@ -266,21 +266,27 @@ StateMachine
 
 Promotion:
 
-  rule := promotion.RegisterRule("Amount Greater Than", func(values MetaValues, order interface{}) bool {
-    return order.(*Order) > values.Get("Amount")
-  })
-  rule.Meta(&admin.Meta{Name: "Amount", Type: "datetime"})
+    rule := promotion.RegisterRule("Amount Greater Than", func(values MetaValues, order interface{}) bool {
+      return order.(*Order) > values.Get("Amount")
+    })
+    rule.Meta(&admin.Meta{Name: "Amount", Type: "number"})
 
-  benefit := promotion.RegisterBenefit("Discount Rate", func(values MetaValues, order interface{}) {
-    order.(*Order).DiscountRate = values.Get("Rate")
-  })
-  benefit.Meta(&admin.Meta{Name: "Rate", Type: "number"})
+    benefit := promotion.RegisterBenefit("Discount Rate", func(values MetaValues, order interface{}) {
+      order.(*Order).DiscountRate = values.Get("Rate")
+    })
+    benefit.Meta(&admin.Meta{Name: "Rate", Type: "number"})
 
-  benefit := promotion.RegisterBenefit("Discount Value", func(values MetaValues, order interface{}) {
-    order.(*Order).DiscountValue = values.Get("Value")
-  })
-  benefit.Meta(&admin.Meta{Name: "Value", Type: "number"})
+    benefit := promotion.RegisterBenefit("Discount Value", func(values MetaValues, order interface{}) {
+      order.(*Order).DiscountValue = values.GetInt("Value")
+    })
+    benefit.Meta(&admin.Meta{Name: "Value", Type: "number"})
+    benefit.Meta(&admin.Meta{Name: "Value2", Type: "number"})
+    benefit.Meta(&admin.Meta{Name: "File", Type: "file"})
 
-  Discount {
-    Name string
-  }
+    benefit2 := promotion.RegisterBenefit("Free Shipping", func(values MetaValues, order interface{}) {
+      order.(*Order).ShippingFee = 0
+    })
+
+    Dvalues.Get("Value")iscount {
+      Name string
+    }
