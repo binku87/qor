@@ -459,6 +459,9 @@ func FormattedDecimal(v interface{}) string {
 		value = vv
 	}
 	if vv, ok := v.(string); ok {
+		if vv == "" {
+			vv = "0"
+		}
 		f, _ := ParseFloat(vv)
 		value, _ = f.Float64()
 	}
