@@ -11,6 +11,7 @@ type CurrentUser interface {
 	DisplayName() string
 	GetId() string
 	GetExternalID() uint
+	GetRoleID() uint
 }
 
 // Context qor context, which is used for many qor components, used to share information between them
