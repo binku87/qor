@@ -9,7 +9,8 @@ import (
 // CurrentUser is an interface, which is used for qor admin to get current logged user
 type CurrentUser interface {
 	DisplayName() string
-	GetId() string 
+	GetId() string
+	GetExternalID() uint
 }
 
 // Context qor context, which is used for many qor components, used to share information between them
