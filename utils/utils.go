@@ -23,6 +23,8 @@ import (
 	"github.com/qor/qor"
 
 	"strings"
+
+	"github.com/shopspring/decimal"
 )
 
 // AppRoot app root path
@@ -468,39 +470,36 @@ func FormattedDecimal(v interface{}) string {
 	if value > 1000000000 {
 		return fmt.Sprintf("%v", int64(value))
 	}
-	for _, digital := range []int{8, 9, 10} {
-		r := formattedDecimal(value, digital)
-		if r != "0" {
-			return r
-		}
-	}
 	if value == 0 {
 		return fmt.Sprintf("%v", value)
 	}
-	return ""
+	return formattedDecimal(value)
 }
 
-func formattedDecimal(value float64, digital int) string {
-	f := fmt.Sprintf("%.9f", value)
-	if digital == 9 {
-		fmt.Sprintf("%.10f", value)
-	} else if digital == 10 {
-		fmt.Sprintf("%.11f", value)
-	}
-	ss := strings.Split(f, ".")
-	big := ss[0]
-	small := strings.TrimRight(ss[1], "0")
-	smallRune := []rune(small)
-	count := digital
-	if len(small) < digital {
-		count = len(small)
-	}
-	if count == 0 {
-		return fmt.Sprintf("%v", int64(value))
-	}
-	small = strings.TrimRight(string(smallRune[0:count]), "0")
-	if small == "" {
-		return fmt.Sprintf("%v", int64(value))
-	}
-	return strings.TrimSpace(fmt.Sprintf("%v.%v", big, small))
+func formattedDecimal(value float64) string {
+	sValue, _ := decimal.NewFromString(fmt.Sprintf("%v", value))
+	return sValue.String()
+	// f := fmt.Sprintf("%.9f", value)
+	// if digital == 9 {
+	// 	fmt.Sprintf("%.10f", value)
+	// } else if digital == 10 {
+	// 	fmt.Sprintf("%.11f", value)
+	// }
+	// ss := strings.Split(f, ".")
+	// big := ss[0]
+	// small := strings.TrimRight(ss[1], "0")
+	// smallRune := []rune(small)
+	// count := digital
+	// if len(small) < digital {
+	// 	count = len(small)
+	// }
+	// if count == 0 {
+	// 	return fmt.Sprintf("%v", int64(value))
+	// }
+	// small = strings.TrimRight(string(smallRune[0:count]), "0")
+	// if small == "" {
+	// 	return fmt.Sprintf("%v", int64(value))
+	// }
+	// return strings.TrimSpace(fmt.Sprintf("%v.%v", big, small))
+
 }

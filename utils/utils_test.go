@@ -175,10 +175,10 @@ func TestFormattedDecimal(t *testing.T) {
 	}{
 		{Float: 0.0, Expected: "0"},
 		{Float: 0.12345678, Expected: "0.12345678"},
-		{Float: 0.123456789, Expected: "0.12345678"},
+		{Float: 0.123456789, Expected: "0.123456789"},
 		{Float: 0.1234, Expected: "0.1234"},
 		{Float: 0.00001234, Expected: "0.00001234"},
-		{Float: 0.000012345, Expected: "0.00001234"},
+		{Float: 0.000012345, Expected: "0.000012345"},
 		{Float: 1.1234, Expected: "1.1234"},
 		{Float: 12345.1234, Expected: "12345.1234"},
 		{Float: 123456789.1234, Expected: "123456789.1234"},
