@@ -453,53 +453,6 @@ func ParseFloat(a interface{}) (f *big.Float, err error) {
 }
 
 func FormattedDecimal(v interface{}) string {
-	var value float64
-	if vv, ok := v.(float32); ok {
-		value = float64(vv)
-	}
-	if vv, ok := v.(float64); ok {
-		value = vv
-	}
-	if vv, ok := v.(string); ok {
-		if vv == "" {
-			vv = "0"
-		}
-		f, _ := ParseFloat(vv)
-		value, _ = f.Float64()
-	}
-	if value > 1000000000 {
-		return fmt.Sprintf("%v", int64(value))
-	}
-	if value == 0 {
-		return fmt.Sprintf("%v", value)
-	}
-	return formattedDecimal(value)
-}
-
-func formattedDecimal(value float64) string {
-	sValue, _ := decimal.NewFromString(fmt.Sprintf("%v", value))
+	sValue, _ := decimal.NewFromString(fmt.Sprintf("%v", v))
 	return sValue.String()
-	// f := fmt.Sprintf("%.9f", value)
-	// if digital == 9 {
-	// 	fmt.Sprintf("%.10f", value)
-	// } else if digital == 10 {
-	// 	fmt.Sprintf("%.11f", value)
-	// }
-	// ss := strings.Split(f, ".")
-	// big := ss[0]
-	// small := strings.TrimRight(ss[1], "0")
-	// smallRune := []rune(small)
-	// count := digital
-	// if len(small) < digital {
-	// 	count = len(small)
-	// }
-	// if count == 0 {
-	// 	return fmt.Sprintf("%v", int64(value))
-	// }
-	// small = strings.TrimRight(string(smallRune[0:count]), "0")
-	// if small == "" {
-	// 	return fmt.Sprintf("%v", int64(value))
-	// }
-	// return strings.TrimSpace(fmt.Sprintf("%v.%v", big, small))
-
 }
