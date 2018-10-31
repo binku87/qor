@@ -10,7 +10,6 @@ import (
 type CurrentUser interface {
 	DisplayName() string
 	GetId() string
-	GetExternalID() uint
 }
 
 // Context qor context, which is used for many qor components, used to share information between them
