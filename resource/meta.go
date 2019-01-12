@@ -13,6 +13,7 @@ import (
 	"github.com/qor/qor/utils"
 	"github.com/qor/roles"
 	"github.com/qor/validations"
+	"github.com/shopspring/decimal"
 )
 
 // Metaor interface
@@ -363,6 +364,19 @@ func setupSetter(meta *Meta, fieldName string, record interface{}) {
 				field.SetBool(true)
 			} else {
 				field.SetBool(false)
+			}
+		})
+	case reflect.Struct:
+		meta.Setter = commonSetter(func(field reflect.Value, metaValue *MetaValue, context *qor.Context, record interface{}) {
+			if _, ok := field.Addr().Interface().(*decimal.Decimal); ok {
+				meta.Setter = commonSetter(func(field reflect.Value, metaValue *MetaValue, context *qor.Context, record interface{}) {
+					if str := utils.ToString(metaValue.Value); str != "" {
+						value, _ := decimal.NewFromString(str)
+						field.Set(reflect.ValueOf(value))
+					} else {
+						field.Set(reflect.Zero(field.Type()))
+					}
+				})
 			}
 		})
 	default:
