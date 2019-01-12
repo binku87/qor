@@ -13,6 +13,7 @@ import (
 	"github.com/qor/qor/utils"
 	"github.com/qor/roles"
 	"github.com/qor/validations"
+	"github.com/shopspring/decimal"
 )
 
 // Metaor interface
@@ -367,21 +368,32 @@ func setupSetter(meta *Meta, fieldName string, record interface{}) {
 		})
 	default:
 		if _, ok := field.Addr().Interface().(sql.Scanner); ok {
-			meta.Setter = commonSetter(func(field reflect.Value, metaValue *MetaValue, context *qor.Context, record interface{}) {
-				if scanner, ok := field.Addr().Interface().(sql.Scanner); ok {
-					if metaValue.Value == nil && len(metaValue.MetaValues.Values) > 0 {
-						decodeMetaValuesToField(meta.Resource, field, metaValue, context)
-						return
+			if _, ok := field.Addr().Interface().(*decimal.Decimal); ok {
+				eta.Setter = commonSetter(func(field reflect.Value, metaValue *MetaValue, context *qor.Context, record interface{}) {
+					if str := utils.ToString(metaValue.Value); str != "" {
+						value, _ := decimal.NewFromString(str)
+						field.Set(reflect.ValueOf(value))
+					} else {
+						field.Set(reflect.Zero(field.Type()))
 					}
-
-					if scanner.Scan(metaValue.Value) != nil {
-						if err := scanner.Scan(utils.ToString(metaValue.Value)); err != nil {
-							context.AddError(err)
+				})
+			} else {
+				meta.Setter = commonSetter(func(field reflect.Value, metaValue *MetaValue, context *qor.Context, record interface{}) {
+					if scanner, ok := field.Addr().Interface().(sql.Scanner); ok {
+						if metaValue.Value == nil && len(metaValue.MetaValues.Values) > 0 {
+							decodeMetaValuesToField(meta.Resource, field, metaValue, context)
 							return
 						}
+
+						if scanner.Scan(metaValue.Value) != nil {
+							if err := scanner.Scan(utils.ToString(metaValue.Value)); err != nil {
+								context.AddError(err)
+								return
+							}
+						}
 					}
-				}
-			})
+				})
+			}
 		} else if reflect.TypeOf("").ConvertibleTo(field.Type()) {
 			meta.Setter = commonSetter(func(field reflect.Value, metaValue *MetaValue, context *qor.Context, record interface{}) {
 				field.Set(reflect.ValueOf(utils.ToString(metaValue.Value)).Convert(field.Type()))
