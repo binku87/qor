@@ -369,7 +369,7 @@ func setupSetter(meta *Meta, fieldName string, record interface{}) {
 	default:
 		if _, ok := field.Addr().Interface().(sql.Scanner); ok {
 			if _, ok := field.Addr().Interface().(*decimal.Decimal); ok {
-				eta.Setter = commonSetter(func(field reflect.Value, metaValue *MetaValue, context *qor.Context, record interface{}) {
+				meta.Setter = commonSetter(func(field reflect.Value, metaValue *MetaValue, context *qor.Context, record interface{}) {
 					if str := utils.ToString(metaValue.Value); str != "" {
 						value, _ := decimal.NewFromString(str)
 						field.Set(reflect.ValueOf(value))
